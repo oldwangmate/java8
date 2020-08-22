@@ -1,6 +1,7 @@
 package com.bigdata.lambda;
 
 public class Employee {
+    private int id;
     private String name;
     private int age;
     private double salary;
@@ -12,6 +13,15 @@ public class Employee {
         this.name = name;
         this.age = age;
         this.salary = salary;
+    }
+
+    public Employee(int age){
+        this.age = age;
+    }
+
+    public Employee(int age,int id){
+        this.id = id;
+        this.age = age;
     }
 
     public String getName() {

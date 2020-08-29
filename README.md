@@ -72,3 +72,38 @@ Lambda：
    数组引用:
    
       Type::new
+  Stream的三个操作步骤
+  
+    1.创建Stream
+       1.可以通过Collection 系列集合提供的stream() 或者parallelStream()
+       2.通过Arrays中的静态方法stream()获取数组流
+       3.通过Stream类中的静态方法 of()
+       4.创建无限流 迭代
+          Stream<Integer> stream4 = Stream.iterate(0, (x) -> x + 2);
+                  stream4.limit(10)
+                          .forEach(System.out::println);
+       5.生成
+               Stream<Double> doubleStream = Stream.generate(() -> Math.random() * 10);
+               doubleStream.limit(10).forEach(System.out::println); 
+    2.中间操作  筛选与切片     
+              filter 接受lambda,从流中排除某些元素
+              limit 截断流 使其元素不超过给定数量
+              skip(N) 跳过元素，返回一个扔掉了前N个元素的流 若流中的元素不足N个 则返回一个空流 与limit(N)互补
+              distinct 筛选 通过流生成元素的HashCode() 和equals() 去除重复元素
+              map--- 接受lambda 将元素抓换成其他形式或提取信息，接受一个函数作为参数，该函数会应用到每个元素上，并将其映射成为一个新的元素
+              flatMap --- 接受一个函数作为参数，将流中的每一个值都换成另外一个流，冉后把所有的流连城一个流
+              sorted() -- 自然排序----(comparable)
+              sorted(Comparator com) 定制排序---(Comparator)    
+    3.终止操作（终端操作）   
+                 查找与匹配
+                    allMath  检查是否匹配所有元素
+                    anyMath  检查是否至少匹配一个元素
+                    noneMath 检查是否没有匹配所有元素
+                    findFirst 返回第一个元素
+                    findAny  返回当前流中的任意元素
+                    count 返回流中元素最大的总个数
+                    max 返回流中最大值
+                    min 返回流中最小值  
+                    归约 reduce(T identity BinaryOperator) / reduce(BinaryOperator) 可以将流中元素反复结合起来，得到一个值
+                    收集 collect 将流转换为其他形式，接受一个collector接口的实现，用于给Stream中元素做汇总的方法
+                      ollect(Collectors.xxx()) 核心工具类 需要研究                        

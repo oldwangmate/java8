@@ -127,4 +127,129 @@ Lambda：
          选择父类中的方法，如果一个父类提供了具体的实现，那么接口中具有同名称和参数默认方法就会被忽略
          接口冲突，如果一个父接口提供一个默认方法，而另外一个接口也提供了一个具有相同名称和参数列表的方法
          不管是否是默认方法，那么必须覆盖该方法来解决冲突
+   
+   新时间与日期API---- 本地时间与时间戳      
+      
+        1.LocalDate表示日期   LocalTime表示时间   LocalDateTime表示日期时间   三者用法一致，只是表达的时间一样
+            @Test
+                public void test1(){
+                    LocalDateTime localDateTime = LocalDateTime.now();
+                    System.out.println(localDateTime);
+            
+                    LocalDateTime localDateTime1 = LocalDateTime.of(2015, 10, 19, 13, 22, 33);
+                    System.out.println(localDateTime1);
                     
+                    LocalDateTime localDateTime2 = localDateTime.plusYears(1);  //加一年
+                    System.out.println(localDateTime2);
+            
+                    LocalDateTime localDateTime3 = localDateTime.minusMonths(2); //减2月
+                    System.out.println(localDateTime3);
+            
+                    System.out.println(localDateTime.getYear());  //获取年
+                    System.out.println(localDateTime.getMonthValue()); // 获取月
+                    System.out.println(localDateTime.getDayOfMonth()); //获取天
+                    System.out.println(localDateTime.getHour()); //小时
+                    System.out.println(localDateTime.getMinute()); //分钟
+                    System.out.println(localDateTime.getSecond()); //秒
+                    System.out.println(localDateTime.getMonth()); //英语月份
+                }
+       2.Instant 时间戳（Unix 元年 1970年一月一日零时零分零秒到此时的毫秒值）
+            @Test
+               public void test2(){
+                   Instant now = Instant.now();  //默认获取的是UTC时区 UTC世界协调时间
+                   System.out.println(now);
+           
+                   OffsetDateTime time = now.atOffset(ZoneOffset.ofHours(8));
+                   System.out.println(time);
+           
+                   System.out.println(now.toEpochMilli());  //转成毫秒值 时间戳
+           
+                   Instant instant = Instant.ofEpochSecond(60);
+                   System.out.println(instant);
+               }
+       3.Duration 计算两个时间之间的间隔
+              @Test
+              public void test3() throws InterruptedException {
+                  Instant instant1 = Instant.now();
+                  TimeUnit.SECONDS.sleep(1);
+                  Instant instant2 = Instant.now();
+                  Duration between = Duration.between(instant1, instant2);
+                  System.out.println(between.toMillis());
+          
+                  System.out.println("----------------");
+          
+                  LocalTime localTime1 = LocalTime.now();
+                  TimeUnit.SECONDS.sleep(1);
+                  LocalTime localTime2 = LocalTime.now();
+                  System.out.println(Duration.between(localTime1,localTime2).toMillis());
+              }       
+       4.Period计算两个日期之间的间隔
+             @Test
+                public void test4(){
+                    LocalDate localDate1 = LocalDate.of(2017,9,1);
+                    LocalDate localDate2 = LocalDate.now();
+                    Period period = Period.between(localDate1, localDate2);
+                    System.out.println(period);
+            
+                    System.out.println(period.getYears());
+                    System.out.println(period.getMonths());
+                    System.out.println(period.getDays());
+                }     
+                
+       5.TemporalAdjuster 时间校正器
+            @Test
+                public void test1(){
+                    LocalDateTime localDateTime1 = LocalDateTime.now();
+                    System.out.println(localDateTime1);
+                    LocalDateTime localDateTime2 = localDateTime1.withDayOfMonth(10);
+                    System.out.println(localDateTime2);
+            
+                    LocalDateTime with = localDateTime1.with(TemporalAdjusters.next(DayOfWeek.SUNDAY)); //下一个周日
+                    System.out.println(with);
+            
+                    //自定义：下一个工作日
+                    LocalDateTime with1 = localDateTime1.with((date) -> {
+                        LocalDateTime localDateTime = (LocalDateTime) date;
+                        DayOfWeek dayOfWeek = localDateTime.getDayOfWeek();
+                        if (dayOfWeek.equals(DayOfWeek.FRIDAY)) {
+                            return localDateTime.plusDays(3);
+                        } else if(dayOfWeek.equals(DayOfWeek.SATURDAY)){
+                            return localDateTime.plusDays(2);
+                        }else {
+                            return localDateTime.plusDays(1);
+                        }
+                    });
+                    System.out.println(with1);
+                }         
+       6.DateTimeFormatter 格式化时间日期
+               @Test
+                   public void test1(){
+                       DateTimeFormatter dateTimeFormatter1 = DateTimeFormatter.ISO_DATE;
+                       LocalDateTime now = LocalDateTime.now();
+               
+                       String format1 = now.format(dateTimeFormatter1);
+                       System.out.println(format1);
+               
+                       System.out.println("-------------");
+               
+                       DateTimeFormatter dateTimeFormatter2 = DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH:mm:ss");
+                       String format2 = dateTimeFormatter2.format(now);
+                       System.out.println(format2);
+               
+                       LocalDateTime parse = now.parse(format2, dateTimeFormatter2);
+                       System.out.println(parse);
+                   }    
+       7.ZonedDate 、ZonedTime ZonedDateTime 带时区   
+                    @Test
+                       public void test2(){
+                           Set<String> zoneIds = ZoneId.getAvailableZoneIds(); //获取所有时区
+                           zoneIds.forEach(System.out::println);
+                   
+                           LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Shanghai"));
+                           System.out.println(now);
+                   
+                           LocalDateTime now1 = LocalDateTime.now();
+                           ZonedDateTime zonedDateTime = now1.atZone(ZoneId.of("Asia/Shanghai")); //带时区的日期格式
+                           System.out.println(zonedDateTime);
+                       }
+         

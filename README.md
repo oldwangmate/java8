@@ -106,4 +106,16 @@ Lambda：
                     min 返回流中最小值  
                     归约 reduce(T identity BinaryOperator) / reduce(BinaryOperator) 可以将流中元素反复结合起来，得到一个值
                     收集 collect 将流转换为其他形式，接受一个collector接口的实现，用于给Stream中元素做汇总的方法
-                      ollect(Collectors.xxx()) 核心工具类 需要研究                        
+                      ollect(Collectors.xxx()) 核心工具类 需要研究         
+  
+  Optional 容器类
+    
+    Optional 容器类的常用方法
+            Optional.of(T t) : 创建一个 Optional 实例
+            Optional.empty() : 创建一个空的 Optional 实例
+            Optional.ofNullable(T t):若 t 不为 null,创建 Optional 实例,否则创建空实例
+            isPresent() : 判断是否包含值
+            orElse(T t) : 如果调用对象包含值，返回该值，否则返回t
+            orElseGet(Supplier s) :如果调用对象包含值，返回该值，否则返回 s 获取的值
+            map(Function f): 如果有值对其处理，并返回处理后的Optional，否则返回 Optional.empty()
+            flatMap(Function mapper):与 map 类似，要求返回值必须是Optional               
